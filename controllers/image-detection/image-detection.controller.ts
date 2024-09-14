@@ -12,7 +12,17 @@ type ImageDetectionFieldsType = {
   aiToUse: string
 }
 
-export const getImageDetection = async (req: Request, res: Response) => {
+/**
+ * Handles image detection requests.
+ *
+ * @param {Request} req - The request object containing fields and files.
+ * @param {Response} res - The response object used to send the response.
+ * @returns {Promise<Response>} - A promise that resolves to the response object.
+ */
+export const getImageDetection = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { items: itemsInput, aiToUse = AISelectorEnum.OPEN_AI } =
     req.fields as unknown as ImageDetectionFieldsType
   const file = req.files?.image as unknown as Express.Multer.File | null

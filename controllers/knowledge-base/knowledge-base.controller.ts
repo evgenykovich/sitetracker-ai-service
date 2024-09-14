@@ -15,7 +15,10 @@ type KnowledgeBaseFieldsType = {
  * @param {Response} res - The response object used to send the response.
  * @returns {Promise<Response>} - The response containing the answer or an error message.
  */
-export const getKnowledgeBase = async (req: Request, res: Response) => {
+export const getKnowledgeBase = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { question, pdfUrl } = req.fields as unknown as KnowledgeBaseFieldsType
   const file = req.files?.file as unknown as File | null
 

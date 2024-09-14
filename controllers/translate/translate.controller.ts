@@ -19,7 +19,10 @@ type TranslateFieldsType = {
  * @param {Response} res - The response object used to send the response.
  * @returns {Promise<Response>} - The response containing the translated text or an error message.
  */
-export const getTranslation = async (req: Request, res: Response) => {
+export const getTranslation = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { text, sourceLang, targetLang } =
       req.fields as unknown as TranslateFieldsType
