@@ -2,6 +2,7 @@
  * Utility functions for handling base64 images, URL validation, and PDF retrieval.
  * @module helpers
  */
+import { promises as fsPromises } from 'fs'
 
 /**
  * Saves a base64 string as an image file, adding the data URL prefix if necessary.
@@ -11,13 +12,6 @@
 export const formatBase64Image = (base64String: string): string => {
   const dataUrlPrefix = 'data:image/jpeg;base64,'
   return dataUrlPrefix + base64String
-}
-
-import { promises as fsPromises } from 'fs'
-import { languageMap } from './consts'
-
-interface GlossaryEntry {
-  [key: string]: string // This allows for dynamic language keys
 }
 
 /**
