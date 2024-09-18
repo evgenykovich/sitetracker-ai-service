@@ -72,7 +72,23 @@ export const translateWithGlossary = async (
   let promptTemplate: PromptTemplate
   if (glossaryFilePath) {
     const glossary = await loadGlossary(glossaryFilePath)
-    modifiedText = findTranslation(glossary as any, targetLang, text)
+    const sortedTerms = Object.keys(glossary).sort(
+      (a, b) => b.length - a.length
+    )
+    modifiedText = text
+    for (const term of sortedTerms) {
+      const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const regex = new RegExp(`\\b${escapedTerm}s?\\b`, 'gi')
+      const translation = findTranslation(glossary as any, targetLang, term)
+      if (translation) {
+        modifiedText = modifiedText.replace(regex, (match) => {
+          return match.endsWith('s') && !translation.endsWith('s')
+            ? translation + 's'
+            : translation
+        })
+      }
+    }
+
     promptTemplate = new PromptTemplate({
       template: `Translate the following text from {sourceLang} to {targetLang}. Provide only the translation, without any additional text:
       
