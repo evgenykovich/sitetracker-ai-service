@@ -1,7 +1,5 @@
 import express from 'express'
-import multer from 'multer'
 import { getTranslation } from '../controllers'
-const upload = multer()
 /**
  * @swagger
  * /api/translate:
@@ -25,6 +23,17 @@ const upload = multer()
  *               targetLang:
  *                 type: string
  *                 description: The target language code (e.g., 'es' for Spanish). Defaults to 'es'.
+ *                 enum:
+ *                   - 'es'
+ *                   - 'it'
+ *                   - 'fr'
+ *                   - 'de'
+ *                   - 'sv'
+ *                   - 'zh_CN'
+ *                   - 'zh_TW'
+ *                   - 'ja'
+ *                   - 'ko'
+ *                   - 'pt_BR'
  *                 default: 'es'
  *               glossary:
  *                 type: file
@@ -61,6 +70,6 @@ const upload = multer()
 
 const router = express.Router()
 
-router.post('/translate', upload.single('file'), getTranslation)
+router.post('/translate', getTranslation)
 
 export default router

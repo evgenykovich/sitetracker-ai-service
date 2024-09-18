@@ -14,6 +14,11 @@ export const formatBase64Image = (base64String: string): string => {
 }
 
 import { promises as fsPromises } from 'fs'
+import { languageMap } from './consts'
+
+interface GlossaryEntry {
+  [key: string]: string // This allows for dynamic language keys
+}
 
 /**
  * Removes the base64 prefix from an image string if present.
@@ -93,4 +98,42 @@ export const convertToBase64 = async (filePath: string): Promise<string> => {
   const fs = require('fs').promises
   const fileBuffer = await fs.readFile(filePath)
   return fileBuffer.toString('base64')
+}
+
+export const findTranslation = (
+  glossary: any,
+  outputLang: string | number,
+  term: string
+) => {
+  const terms = Object.keys(glossary)
+  let text = term
+
+  terms.forEach((term) => {
+    const regex = new RegExp(`\\b${term}\\b`, 'gi')
+    const translation = glossary[term][outputLang] || term
+    text = text.replace(regex, translation)
+  })
+
+  return text
+}
+
+export const mapColumnToLang = (columnKey: string): string => {
+  const columnMapping: { [key: string]: string } = {
+    Column7: 'zh_TW',
+    Column9: 'zh_CN',
+    Column11: 'pt_BR',
+    Column13: 'en_US',
+    Column15: 'de',
+    Column17: 'es',
+    Column19: 'fr',
+    Column21: 'it',
+    Column23: 'ja',
+    Column25: 'ko',
+    Column29: 'da',
+    Column31: 'sv',
+    Column33: 'no',
+    Column35: 'nl_NL',
+    Column37: 'es_MX',
+  }
+  return columnMapping[columnKey] || columnKey
 }
