@@ -100,11 +100,18 @@ export const convertToBase64 = async (filePath: string): Promise<string> => {
   return fileBuffer.toString('base64')
 }
 
+/**
+ * Finds the translation of a term using the provided glossary.
+ * @param {Object} glossary - The glossary containing translations.
+ * @param {string | number} outputLang - The target language for translation.
+ * @param {string} term - The term to be translated.
+ * @returns {string} The translated text.
+ */
 export const findTranslation = (
   glossary: any,
   outputLang: string | number,
   term: string
-) => {
+): string => {
   const terms = Object.keys(glossary)
   let text = term
 
@@ -117,6 +124,11 @@ export const findTranslation = (
   return text
 }
 
+/**
+ * Maps a column key to a language code.
+ * @param {string} columnKey - The key of the column to map.
+ * @returns {string} The corresponding language code.
+ */
 export const mapColumnToLang = (columnKey: string): string => {
   const columnMapping: { [key: string]: string } = {
     Column7: 'zh_TW',
