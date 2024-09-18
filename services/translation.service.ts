@@ -72,22 +72,22 @@ export const translateWithGlossary = async (
   let promptTemplate: PromptTemplate
   if (glossaryFilePath) {
     const glossary = await loadGlossary(glossaryFilePath)
-    const sortedTerms = Object.keys(glossary).sort(
-      (a, b) => b.length - a.length
-    )
-    modifiedText = text
-    for (const term of sortedTerms) {
-      const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const regex = new RegExp(`\\b${escapedTerm}s?\\b`, 'gi')
+    const pattern = Object.keys(glossary)
+      .sort((a, b) => b.length - a.length)
+      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('|')
+    const regex = new RegExp(`\\b(${pattern})s?\\b`, 'gi')
+
+    modifiedText = text.replace(regex, (match) => {
+      const term = match.replace(/s$/, '')
       const translation = findTranslation(glossary as any, targetLang, term)
       if (translation) {
-        modifiedText = modifiedText.replace(regex, (match) => {
-          return match.endsWith('s') && !translation.endsWith('s')
-            ? translation + 's'
-            : translation
-        })
+        return match.endsWith('s') && !translation.endsWith('s')
+          ? translation + 's'
+          : translation
       }
-    }
+      return match
+    })
 
     promptTemplate = new PromptTemplate({
       template: `Translate the following text from {sourceLang} to {targetLang}. Provide only the translation, without any additional text:
