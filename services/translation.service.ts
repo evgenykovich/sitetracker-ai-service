@@ -18,7 +18,7 @@ interface GlossaryEntryItem {
  * @param {string} glossaryFilePath - The path to the glossary file.
  * @returns {Promise<GlossaryEntryItem>} - A promise that resolves to an object representing the glossary.
  */
-const loadGlossary = async (
+export const loadGlossary = async (
   glossaryFilePath: string
 ): Promise<GlossaryEntryItem> => {
   const fileContent = await fs.readFile(glossaryFilePath)
