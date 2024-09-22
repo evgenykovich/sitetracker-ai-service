@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/20</span>
+                <span class='fraction'>19/20</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">86.66% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">80% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>12/15</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.94% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/19</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
@@ -146,40 +146,40 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Request, Response } from 'express'
 import {
@@ -223,18 +223,18 @@ export const getImageDetection = async (
    */
   const detectFunctions = {
     [AISelectorEnum.OPEN_AI]: detect,
-    [AISelectorEnum.GEMINI]: <span class="fstat-no" title="function not covered" >(i</span>mage: string, items: string[]) =&gt;
-<span class="cstat-no" title="statement not covered" >      geminiDetectImage(image, AIAction.DETECT, items),</span>
-    [AISelectorEnum.CLAUDE]: <span class="fstat-no" title="function not covered" >(i</span>mage: string, items: string[]) =&gt;
-<span class="cstat-no" title="statement not covered" >      claudeDetectImage(image, AIAction.DETECT, items),</span>
+    [AISelectorEnum.GEMINI]: (image: string, items: string[]) =&gt;
+      geminiDetectImage(image, AIAction.DETECT, items),
+    [AISelectorEnum.CLAUDE]: (image: string, items: string[]) =&gt;
+      claudeDetectImage(image, AIAction.DETECT, items),
     [AISelectorEnum.AWS_REKOGNITION]: awsRekognitionDetectImage,
   }
 &nbsp;
   const detectFunction =
     detectFunctions[aiToUse as keyof typeof detectFunctions]
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!detectFunction) {
-<span class="cstat-no" title="statement not covered" >    return res.status(400).json({ error: 'Invalid AI selection' })</span>
+  if (!detectFunction) {
+    return res.status(400).json({ error: 'Invalid AI selection' })
   }
 &nbsp;
   const detectedItems = await detectFunction(image as string, items)
@@ -247,7 +247,7 @@ export const getImageDetection = async (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-22T12:18:14.421Z
+                at 2024-09-22T12:27:04.238Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1727007494433" clover="3.2.0">
-  <project timestamp="1727007494433" name="All files">
-    <metrics statements="216" coveredstatements="209" conditionals="77" coveredconditionals="66" methods="44" coveredmethods="40" elements="337" coveredelements="315" complexity="0" loc="216" ncloc="216" packages="4" files="9" classes="9"/>
+<coverage generated="1727008024250" clover="3.2.0">
+  <project timestamp="1727008024250" name="All files">
+    <metrics statements="216" coveredstatements="212" conditionals="77" coveredconditionals="67" methods="44" coveredmethods="42" elements="337" coveredelements="321" complexity="0" loc="216" ncloc="216" packages="4" files="9" classes="9"/>
     <package name="controllers.image-detection">
-      <metrics statements="19" coveredstatements="15" conditionals="15" coveredconditionals="12" methods="5" coveredmethods="2"/>
+      <metrics statements="19" coveredstatements="18" conditionals="15" coveredconditionals="13" methods="5" coveredmethods="4"/>
       <file name="image-detection.controller.ts" path="D:\Projects\sitetracker-ai-service\controllers\image-detection\image-detection.controller.ts">
-        <metrics statements="19" coveredstatements="15" conditionals="15" coveredconditionals="12" methods="5" coveredmethods="2"/>
+        <metrics statements="19" coveredstatements="18" conditionals="15" coveredconditionals="13" methods="5" coveredmethods="4"/>
         <line num="2" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
-        <line num="25" count="4" type="stmt"/>
-        <line num="27" count="4" type="stmt"/>
-        <line num="28" count="4" type="cond" truecount="3" falsecount="1"/>
-        <line num="29" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="9" type="stmt"/>
+        <line num="27" count="9" type="stmt"/>
+        <line num="28" count="9" type="cond" truecount="3" falsecount="1"/>
+        <line num="29" count="9" type="cond" truecount="2" falsecount="0"/>
         <line num="31" count="0" type="cond" truecount="3" falsecount="1"/>
-        <line num="32" count="4" type="cond" truecount="3" falsecount="0"/>
+        <line num="32" count="9" type="cond" truecount="3" falsecount="0"/>
         <line num="33" count="3" type="stmt"/>
-        <line num="36" count="1" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
-        <line num="53" count="1" type="cond" truecount="0" falsecount="1"/>
-        <line num="54" count="0" type="stmt"/>
-        <line num="57" count="1" type="stmt"/>
-        <line num="58" count="1" type="stmt"/>
+        <line num="36" count="6" type="stmt"/>
+        <line num="41" count="6" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="51" count="6" type="stmt"/>
+        <line num="53" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
       </file>
     </package>
     <package name="controllers.knowledge-base">
