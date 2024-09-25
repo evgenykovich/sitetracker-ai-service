@@ -121,7 +121,7 @@ export const geminiDetectImage = async (
         )} and or the things you see in the image using rough estimates based on the items that might be in the image.`
         break
       default:
-        break
+        return undefined
     }
 
     const image = {
@@ -169,7 +169,7 @@ export const claudeDetectImage = async (
         )} and or the things you see in the image using rough estimates based on the items that might be in the image.`
         break
       default:
-        break
+        return undefined
     }
     const message = await anthropic.messages.create({
       model: 'claude-3-opus-20240229',

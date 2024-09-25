@@ -28,7 +28,7 @@ export const getImageDetection = async (
   const file = req.files?.image as unknown as Express.Multer.File | null
   const items = Array.isArray(itemsInput)
     ? itemsInput
-    : (itemsInput as string).split(',').map((item: string) => item.trim())
+    : (itemsInput as string)?.split(',').map((item: string) => item.trim())
   if (!file || !items) {
     return res.status(400).json({ error: 'Invalid request' })
   }
