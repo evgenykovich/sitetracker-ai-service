@@ -270,6 +270,38 @@ describe('Image Detection Service', () => {
 
       consoleSpy.mockRestore()
     })
+    it('should handle error when generating content', async () => {
+      const mockError = new Error('Content generation error')
+      const mockGenerateContent = jest.fn().mockRejectedValue(mockError)
+      const mockGetGenerativeModel = jest.fn().mockReturnValue({
+        generateContent: mockGenerateContent,
+      })
+      ;(
+        GoogleGenerativeAI as jest.MockedClass<typeof GoogleGenerativeAI>
+      ).mockImplementation(
+        () =>
+          ({
+            getGenerativeModel: mockGetGenerativeModel,
+          } as any)
+      )
+
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation()
+
+      const result = await geminiDetectImage(
+        mockImageBase64,
+        AIAction.DETECT,
+        mockItems
+      )
+
+      expect(result).toBeUndefined()
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error initializing Gemini',
+        mockError
+      )
+      expect(mockGenerateContent).toHaveBeenCalled()
+
+      consoleSpy.mockRestore()
+    })
   })
 
   describe('claudeDetectImage', () => {
@@ -408,6 +440,43 @@ describe('Image Detection Service', () => {
           MinConfidence: 70,
         })
       )
+    })
+    it('should handle empty Labels array', async () => {
+      const mockResponse = {
+        Labels: [],
+      }
+      ;(
+        AWS.Rekognition as jest.MockedClass<typeof AWS.Rekognition>
+      ).mockImplementation(
+        () =>
+          ({
+            detectLabels: jest.fn().mockReturnValue({
+              promise: jest.fn().mockResolvedValue(mockResponse),
+            }),
+          } as any)
+      )
+
+      const result = await awsRekognitionDetectImage(mockImageBase64, mockItems)
+
+      expect(result).toBe('')
+    })
+
+    it('should handle undefined Labels', async () => {
+      const mockResponse = {}
+      ;(
+        AWS.Rekognition as jest.MockedClass<typeof AWS.Rekognition>
+      ).mockImplementation(
+        () =>
+          ({
+            detectLabels: jest.fn().mockReturnValue({
+              promise: jest.fn().mockResolvedValue(mockResponse),
+            }),
+          } as any)
+      )
+
+      const result = await awsRekognitionDetectImage(mockImageBase64, mockItems)
+
+      expect(result).toBeUndefined()
     })
   })
 })

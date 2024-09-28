@@ -3,6 +3,11 @@ import { getKnowledgeBase } from './knowledge-base.controller'
 import { analyzePDF } from '../../services'
 import { getPdfBuffer } from '../../utils'
 
+type KnowledgeBaseFieldsType = {
+  question: string | string[]
+  pdfUrl: string
+}
+
 jest.mock('../../services')
 jest.mock('../../utils')
 
@@ -98,5 +103,55 @@ describe('KnowledgeBaseController', () => {
 
     expect(mockStatus).toHaveBeenCalledWith(400)
     expect(mockJson).toHaveBeenCalledWith({ error: 'PDF retrieval failed' })
+  })
+  it('should handle case when question is an array', async () => {
+    const mockFile = { buffer: Buffer.from('test') }
+    mockRequest.fields = { question: ['Test question'] }
+    mockRequest.files = { file: mockFile as any }
+
+    const mockPdfBuffer = Buffer.from('pdf content')
+    ;(getPdfBuffer as jest.Mock).mockResolvedValue(mockPdfBuffer)
+    ;(analyzePDF as jest.Mock).mockResolvedValue('Test answer')
+
+    await getKnowledgeBase(mockRequest as Request, mockResponse as Response)
+
+    expect(analyzePDF).toHaveBeenCalledWith(['Test question'], mockPdfBuffer)
+    expect(mockStatus).toHaveBeenCalledWith(200)
+    expect(mockJson).toHaveBeenCalledWith({ answer: 'Test answer' })
+  })
+
+  it('should handle errors without message', async () => {
+    mockRequest.fields = {
+      question: 'Test question' as any,
+      pdfUrl: 'http://example.com/test.pdf' as any,
+    }
+    ;(getPdfBuffer as jest.Mock).mockRejectedValue(new Error())
+
+    await getKnowledgeBase(mockRequest as Request, mockResponse as Response)
+
+    expect(mockStatus).toHaveBeenCalledWith(400)
+    expect(mockJson).toHaveBeenCalledWith({ error: 'An error occurred' })
+  })
+
+  it('should handle fields of KnowledgeBaseFieldsType', async () => {
+    const mockFields: KnowledgeBaseFieldsType = {
+      question: 'Test question',
+      pdfUrl: 'http://example.com/test.pdf',
+    }
+    mockRequest.fields = mockFields as any
+
+    const mockPdfBuffer = Buffer.from('pdf content')
+    ;(getPdfBuffer as jest.Mock).mockResolvedValue(mockPdfBuffer)
+    ;(analyzePDF as jest.Mock).mockResolvedValue('Test answer')
+
+    await getKnowledgeBase(mockRequest as Request, mockResponse as Response)
+
+    expect(getPdfBuffer).toHaveBeenCalledWith(
+      undefined,
+      'http://example.com/test.pdf'
+    )
+    expect(analyzePDF).toHaveBeenCalledWith('Test question', mockPdfBuffer)
+    expect(mockStatus).toHaveBeenCalledWith(200)
+    expect(mockJson).toHaveBeenCalledWith({ answer: 'Test answer' })
   })
 })

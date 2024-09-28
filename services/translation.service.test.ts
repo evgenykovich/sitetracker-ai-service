@@ -198,5 +198,176 @@ describe('Translation Service', () => {
         text: 'Hola world',
       })
     })
+
+    it('should handle glossary terms without entry for source language', async () => {
+      const mockGlossary = {
+        apple: { es: 'manzana', fr: 'pomme' }, // No English (source language) entry
+      }
+      jest
+        .spyOn(translationService, 'loadGlossary')
+        .mockResolvedValue(mockGlossary as any)
+
+      const mockTranslation = 'Me gustan las manzanas'
+      ;(LLMChain.prototype.call as jest.Mock).mockResolvedValue({
+        text: mockTranslation,
+      })
+
+      const result = await translationService.translateWithGlossary(
+        'I like apples',
+        '../mocks/glossary.xlsx',
+        'en',
+        'es'
+      )
+
+      expect(result).toBe('Me gustan las manzanas')
+
+      // Check if the specific call we're interested in was made
+      const calls = (LLMChain.prototype.call as jest.Mock).mock.calls
+      const targetCall = calls.find(
+        (call) =>
+          call[0].sourceLang === 'en' &&
+          call[0].targetLang === 'es' &&
+          call[0].text.includes('manzanas')
+      )
+
+      expect(targetCall).toBeTruthy()
+      if (targetCall) {
+        expect(targetCall[0]).toEqual(
+          expect.objectContaining({
+            sourceLang: 'en',
+            targetLang: 'es',
+            text: 'I like manzanas',
+          })
+        )
+      }
+    })
+
+    it('should handle glossary terms without entry for source language but with target language', async () => {
+      const mockGlossary = {
+        apple: { fr: 'pomme', es: 'manzana' }, // No English (source language) entry
+      }
+      jest
+        .spyOn(translationService, 'loadGlossary')
+        .mockResolvedValue(mockGlossary as any)
+
+      const mockTranslation = 'Me gustan las manzanas'
+      ;(LLMChain.prototype.call as jest.Mock).mockResolvedValue({
+        text: mockTranslation,
+      })
+
+      const result = await translationService.translateWithGlossary(
+        'I like apples',
+        '../mocks/glossary.xlsx',
+        'en',
+        'es'
+      )
+
+      expect(result).toBe('Me gustan las manzanas')
+
+      const calls = (LLMChain.prototype.call as jest.Mock).mock.calls
+      const targetCall = calls.find(
+        (call) =>
+          call[0].sourceLang === 'en' &&
+          call[0].targetLang === 'es' &&
+          call[0].text.includes('manzanas')
+      )
+
+      expect(targetCall).toBeTruthy()
+      if (targetCall) {
+        expect(targetCall[0]).toEqual(
+          expect.objectContaining({
+            sourceLang: 'en',
+            targetLang: 'es',
+            text: 'I like manzanas',
+          })
+        )
+      }
+
+      // Verify that the glossary was used despite no source language entry
+      expect(translationService.loadGlossary).toHaveBeenCalled()
+    })
+
+    it('should handle plural forms in glossary translation', async () => {
+      const mockGlossary = {
+        apple: { en_US: 'apple', es: 'manzana' },
+      }
+      jest
+        .spyOn(translationService, 'loadGlossary')
+        .mockResolvedValue(mockGlossary as any)
+
+      const mockTranslation = 'Me gustan las manzanas'
+      ;(LLMChain.prototype.call as jest.Mock).mockResolvedValue({
+        text: mockTranslation,
+      })
+
+      const result = await translationService.translateWithGlossary(
+        'I like apples',
+        '../mocks/glossary.xlsx',
+        'en',
+        'es'
+      )
+
+      expect(result).toBe('Me gustan las manzanas')
+      expect(LLMChain.prototype.call).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sourceLang: 'en',
+          targetLang: 'es',
+          text: 'I like manzanas',
+        })
+      )
+    })
+
+    it('should handle complex glossary replacements including plurals and special characters', async () => {
+      const mockGlossary = {
+        apple: { en_US: 'apple', es: 'manzana' },
+        orange: { en_US: 'orange', es: 'naranja' },
+        'fruit salad': { en_US: 'fruit salad', es: 'ensalada de frutas' },
+        'C\\+\\+': { en_US: 'C++', es: 'C++' },
+        '\\(test\\)': { en_US: '(test)', es: '(prueba)' },
+      }
+      jest
+        .spyOn(translationService, 'loadGlossary')
+        .mockResolvedValue(mockGlossary as any)
+
+      const mockTranslation =
+        'Me gustan las manzanas, naranjas, ensalada de frutas, C++ y (prueba)s'
+      ;(LLMChain.prototype.call as jest.Mock).mockResolvedValue({
+        text: mockTranslation,
+      })
+
+      const result = await translationService.translateWithGlossary(
+        'I like apples, oranges, fruit salad, C++ and (test)s',
+        '../mocks/glossary.xlsx',
+        'en',
+        'es'
+      )
+
+      expect(result).toBe(
+        'Me gustan las manzanas, naranjas, ensalada de frutas, C++ y (prueba)s'
+      )
+
+      const calls = (LLMChain.prototype.call as jest.Mock).mock.calls
+      const targetCall = calls.find(
+        (call) =>
+          call[0].sourceLang === 'en' &&
+          call[0].targetLang === 'es' &&
+          call[0].text.includes('manzanas') &&
+          call[0].text.includes('naranjas') &&
+          call[0].text.includes('ensalada de frutas') &&
+          call[0].text.includes('C++') &&
+          call[0].text.includes('(test)s')
+      )
+
+      expect(targetCall).toBeTruthy()
+      if (targetCall) {
+        expect(targetCall[0]).toEqual(
+          expect.objectContaining({
+            sourceLang: 'en',
+            targetLang: 'es',
+            text: 'I like manzanas, naranjas, ensalada de frutas, C++ and (test)s',
+          })
+        )
+      }
+    })
   })
 })

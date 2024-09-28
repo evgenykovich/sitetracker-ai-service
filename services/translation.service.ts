@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import { OpenAI as langChainOpenAI } from 'langchain/llms/openai'
 import { LLMChain } from 'langchain/chains'
 import { PromptTemplate } from 'langchain/prompts'
-import { findTranslation, mapColumnToLang } from '../utils'
+import { escapeRegExp, findTranslation, mapColumnToLang } from '../utils'
 
 interface GlossaryEntryItem {
   [key: string]: {
@@ -74,7 +74,7 @@ export const translateWithGlossary = async (
     const glossary = await loadGlossary(glossaryFilePath)
     const pattern = Object.keys(glossary)
       .sort((a, b) => b.length - a.length)
-      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .map((term) => escapeRegExp(term))
       .join('|')
     const regex = new RegExp(`\\b(${pattern})s?\\b`, 'gi')
 

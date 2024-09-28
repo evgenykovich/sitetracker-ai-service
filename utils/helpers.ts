@@ -143,3 +143,7 @@ export const mapColumnToLang = (columnKey: string): string => {
   }
   return columnMapping[columnKey] || columnKey
 }
+
+export function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
