@@ -3,6 +3,7 @@
  * @module helpers
  */
 import { promises as fsPromises } from 'fs'
+import { GlossaryEntryItem } from '../services'
 
 /**
  * Saves a base64 string as an image file, adding the data URL prefix if necessary.
@@ -102,7 +103,7 @@ export const convertToBase64 = async (filePath: string): Promise<string> => {
  * @returns {string} The translated text.
  */
 export const findTranslation = (
-  glossary: any,
+  glossary: GlossaryEntryItem,
   outputLang: string | number,
   term: string
 ): string => {

@@ -220,7 +220,7 @@ export const awsRekognitionDetectImage = async (
 
   const response = await rekognition.detectLabels(params).promise()
 
-  const detectedItems = response.Labels?.map((label: any) => label.Name)
+  const detectedItems = response.Labels?.map((label) => label.Name)
 
   return detectedItems?.join(', ')
 }
