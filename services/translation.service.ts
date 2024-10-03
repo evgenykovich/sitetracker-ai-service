@@ -5,10 +5,14 @@ import { LLMChain } from 'langchain/chains'
 import { PromptTemplate } from 'langchain/prompts'
 import { findTranslation, mapColumnToLang } from '../utils'
 
-interface GlossaryEntryItem {
+export interface GlossaryEntryItem {
   [key: string]: {
     [lang: string]: string
   }
+}
+interface RawGlossaryRow {
+  Column1: string
+  [key: string]: string
 }
 
 /**
@@ -25,11 +29,11 @@ export const loadGlossary = async (
   const workbook = xlsx.read(fileContent, { type: 'buffer' })
   const sheetName = workbook.SheetNames[0]
   const sheet = workbook.Sheets[sheetName]
-  const rawData = xlsx.utils.sheet_to_json(sheet)
+  const rawData = xlsx.utils.sheet_to_json(sheet) as RawGlossaryRow[]
 
   const glossary: GlossaryEntryItem = {}
 
-  rawData.forEach((row: any) => {
+  rawData.forEach((row: RawGlossaryRow) => {
     const term = row['Column1']
     if (!term) return
 
@@ -80,7 +84,7 @@ export const translateWithGlossary = async (
 
     modifiedText = text.replace(regex, (match) => {
       const term = match.replace(/s$/, '')
-      const translation = findTranslation(glossary as any, targetLang, term)
+      const translation = findTranslation(glossary, targetLang, term)
       if (translation) {
         return match.endsWith('s') && !translation.endsWith('s')
           ? translation + 's'
